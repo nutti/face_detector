@@ -1,0 +1,23 @@
+<html>
+<head>
+Face Detector
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+
+<canvas id="canvas" width="512" height="512" style="border: 1px lightgray solid;"></canvas>
+
+<form id="url">
+	<input type="url" name ="image_url" placeholder="Image URL ...">
+	<span class id="message"></span>
+	<input type="submit">
+</form>
+
+<span id="json">
+	test
+</span>
+
+</body>
+</html>
+
