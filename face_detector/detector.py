@@ -67,9 +67,4 @@ def output_image(filename, image, rect):
 	cv2.imwrite(filename, image[rect['y']:(rect['y']+rect['height']), rect['x']:(rect['x']+rect['width'])])
 
 
-#if __name__ == "__main__":
-#	param = sys.argv
-#	config_proxy()
-#	detect_face(param[1])
-
 
