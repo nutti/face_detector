@@ -1,2 +1,5 @@
 *.pyc
 venv_test/*
+venv/*
+tensorflow*
+tmp/*
