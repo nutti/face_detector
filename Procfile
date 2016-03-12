@@ -1,1 +1,1 @@
-web:gunicorn app:app --log-file=-
+web:gunicorn nutti-face-detector:app --log-file -
