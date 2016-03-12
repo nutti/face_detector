@@ -1,1 +1,1 @@
-web:gunicorn nutti-face-detector:app --log-file -
+web: python main.py
