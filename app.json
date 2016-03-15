@@ -1,0 +1,6 @@
+{
+  "name": "Anime Charactor Face Detector",
+  "description": "Detect face of anime charactor",
+  "image": "sugyan/heroku-python-opencv",
+  "addons": []
+}
