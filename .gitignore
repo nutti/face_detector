@@ -3,3 +3,7 @@ venv_test/*
 venv/*
 tensorflow*
 tmp/*
+twitter.json
+proxy.json
+.bundle/
+

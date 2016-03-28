@@ -8,10 +8,16 @@ require 'net/http'
 require 'uri'
 require 'rmagick'
 
+require 'twitter'
+
 
 namespace :tf_app do
-	proxy_file_path = 'proxy.json'
-	data = open(proxy_file_path) do |io|
+    PROXY_FILE = 'proxy.json'
+    PROXY_FILE.freeze
+    TWITTER_FILE = 'twitter.json'
+    TWITTER_FILE.freeze
+
+	data = open(PROXY_FILE) do |io|
 		JSON.load(io)
 	end
 	pxy = data['proxy']
@@ -70,6 +76,39 @@ namespace :tf_app do
 				sleep 1
 			end
 		end
+    end
 
-	end
+	task :twitter, %w(search_word num_tweets) do |_task, args|
+        tw_data = open(TWITTER_FILE) do |io|
+            JSON.load(io)
+        end
+        client = Twitter::REST::Client.new do |config|
+            config.consumer_key = tw_data['consumer_key']
+            config.consumer_secret = tw_data['consumer_secret']
+            config.access_token = tw_data['access_token']
+            config.access_token_secret = tw_data['access_token_secret']
+            config.proxy = data['proxy_ipuri']
+        end
+        print("searching images...\n")
+        tweets = client.search("#{args.search_word} filter:images -filter:retweets", lang: 'ja', locale: 'ja').take(args.num_tweets.to_i)
+        print("downloading images...\n")
+        img_count = 0
+        client.statuses(tweets, include_entities: true).each do |tweet|
+            tweet.media.each do |media|
+                uid = ['twitter', media.id].join(':')
+                open(media.media_url_https, options) {|f|
+                    outdir = "images/"
+                    ext = File.extname(media.media_url_https)
+                    filename = outdir + img_count.to_s + ext
+                    File.open(filename, "wb") do |file|
+                        file.puts f.read
+                    end
+                    print("downloaded: " + media.media_url_https + " (saved as " + filename + ")\n")
+                }
+                img_count += 1
+            end
+        end
+        print(img_count.to_s + " images are downloaded.\n")
+    end
+
 end
