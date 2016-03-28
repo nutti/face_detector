@@ -6,4 +6,7 @@ tmp/*
 twitter.json
 proxy.json
 .bundle/
+images/
+set_cvpath.sh
+
 

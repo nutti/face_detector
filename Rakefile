@@ -17,13 +17,16 @@ namespace :tf_app do
     TWITTER_FILE = 'twitter.json'
     TWITTER_FILE.freeze
 
-	data = open(PROXY_FILE) do |io|
-		JSON.load(io)
-	end
-	pxy = data['proxy']
-	usr = data['user']
-	pss = data['password']
-	options = { :proxy_http_basic_authentication => [pxy,usr,pss] }
+    options = {}
+    if File.exist?(PROXY_FILE)
+        data = open(PROXY_FILE) do |io|
+            JSON.load(io)
+        end
+        pxy = data['proxy']
+        usr = data['user']
+        pss = data['password']
+        options = { :proxy_http_basic_authentication => [pxy,usr,pss] }
+    end
 
 	task :api, %w(uri face_type) do |_task, args|
 		uri = URI('http://localhost:5000/api')
@@ -79,6 +82,9 @@ namespace :tf_app do
     end
 
 	task :twitter, %w(search_word num_tweets) do |_task, args|
+        unless File.exist?(TWITTER_FILE)
+            exit(1)
+        end
         tw_data = open(TWITTER_FILE) do |io|
             JSON.load(io)
         end
@@ -87,7 +93,9 @@ namespace :tf_app do
             config.consumer_secret = tw_data['consumer_secret']
             config.access_token = tw_data['access_token']
             config.access_token_secret = tw_data['access_token_secret']
-            config.proxy = data['proxy_ipuri']
+            if File.exist?(PROXY_FILE)
+                config.proxy = data['proxy_ipuri']
+            end
         end
         print("searching images...\n")
         tweets = client.search("#{args.search_word} filter:images -filter:retweets", lang: 'ja', locale: 'ja').take(args.num_tweets.to_i)
