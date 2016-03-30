@@ -8,5 +8,6 @@ proxy.json
 .bundle/
 images/
 set_cvpath.sh
+processed/
 
 
